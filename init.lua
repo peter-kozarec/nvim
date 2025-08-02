@@ -51,6 +51,9 @@ require("lazy").setup({
     spec = {
         { "nvim-lua/plenary.nvim" },
         { "sharkdp/fd" },
+        { "mfussenegger/nvim-dap" },
+        { "rcarriga/nvim-dap-ui" },
+        { "theHamsta/nvim-dap-virtual-text" },
 
         {
             "nvim-telescope/telescope.nvim",
@@ -204,15 +207,8 @@ require("lazy").setup({
             "neovim/nvim-lspconfig",
             config = function()
                 local capabilities = require("cmp_nvim_lsp").default_capabilities()
-                require("lspconfig").gopls.setup({ capabilities = capabilities })
-                require("lspconfig").clangd.setup({
-                    capabilities = capabilities,
-                    on_attach = function(_, bufnr)
-                        local opts = { noremap = true, silent = true }
-                        local map = vim.api.nvim_buf_set_keymap
-                        map(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-                        map(bufnr, 'n', 'gI', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-                    end,
+                require("lspconfig").gopls.setup({ 
+                    capabilities = capabilities 
                 })
             end,
         },
