@@ -39,6 +39,8 @@ vim.opt.signcolumn = "yes"
 vim.opt.updatetime = 50
 
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+vim.keymap.set("n", "gd", vim.lsp.buf.definition)
+vim.keymap.set("n", "K", vim.lsp.buf.hover)
 
 -- =====================
 -- Plugins
@@ -53,23 +55,27 @@ require("lazy").setup({
         -- Telescope
         {
             "nvim-telescope/telescope.nvim",
-            cmd = "Telescope",
             dependencies = { "nvim-lua/plenary.nvim" },
+
+            keys = {
+                { "<leader>ff", function() require("telescope.builtin").find_files() end },
+                { "<leader>fg", function() require("telescope.builtin").live_grep() end },
+                { "<leader>fb", function() require("telescope.builtin").buffers() end },
+                { "<leader>fh", function() require("telescope.builtin").help_tags() end },
+
+                { "<leader>ds", function() require("telescope.builtin").lsp_document_symbols() end },
+                { "<leader>ws", function() require("telescope.builtin").lsp_workspace_symbols() end },
+                { "gr", function() require("telescope.builtin").lsp_references() end },
+            },
+
             config = function()
-                local builtin = require("telescope.builtin")
-
-                vim.keymap.set("n", "<leader>ff", builtin.find_files)
-                vim.keymap.set("n", "<leader>fg", builtin.live_grep)
-                vim.keymap.set("n", "<leader>fb", builtin.buffers)
-                vim.keymap.set("n", "<leader>fh", builtin.help_tags)
-
                 require("telescope").setup({
                     pickers = {
                         find_files = {
                             find_command = {
                                 "rg", "--files", "--hidden",
-                                "--glob", "!**/.git/*"
-                            },
+                                "--glob", "!**/.git/*",
+                            },  
                         },
                     },
                 })
