@@ -76,17 +76,28 @@ require("lazy").setup({
             end,
         },
 
-        -- Treesitter (FIXED LOADING)
+        -- Treesitter 
         {
             "nvim-treesitter/nvim-treesitter",
+            version = false, 
             build = ":TSUpdate",
-            event = { "BufReadPost", "BufNewFile" },
-            config = function()
-                require("nvim-treesitter.configs").setup({
-                    ensure_installed = { "go", "lua", "vim", "vimdoc" },
-                    highlight = { enable = true },
-                    indent = { enable = true },
-                })
+            lazy = false, 
+            main = "nvim-treesitter.configs", 
+            branch = "master", 
+            opts = {
+                ensure_installed = { "lua", "vim", "vimdoc", "query", "python", "c", "go", "cpp", "markdown", "markdown_inline", "csv", "json"},
+                auto_install = true,
+                highlight = { enable = true },
+                indent = { enable = true },
+            },
+            -- Fallback config to handle edge cases
+            config = function(_, opts)
+                -- Protective call: If treesitter fails to load, don't crash neovim
+                local status_ok, configs = pcall(require, "nvim-treesitter.configs")
+                if not status_ok then
+                    return
+                end
+                configs.setup(opts)
             end,
         },
 
@@ -149,7 +160,7 @@ require("lazy").setup({
             end,
         },
 
-        -- LSP (MODERN API)
+        -- LSP 
         {
             "neovim/nvim-lspconfig",
             event = { "BufReadPre", "BufNewFile" },
@@ -160,8 +171,12 @@ require("lazy").setup({
                 vim.lsp.config("gopls", {
                     capabilities = capabilities,
                 })
-
                 vim.lsp.enable("gopls")
+
+		vim.lsp.config("clangd", {
+		    capabilities = capabilities,
+		})
+		vim.lsp.enable("clangd")
             end,
         },
 
