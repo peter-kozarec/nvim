@@ -23,7 +23,7 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
-vim.opt.expandtab = true
+-- vim.opt.expandtab = true
 vim.opt.smartindent = true
 vim.opt.wrap = false
 
@@ -179,10 +179,10 @@ require("lazy").setup({
                 })
                 vim.lsp.enable("gopls")
 
-		vim.lsp.config("clangd", {
-		    capabilities = capabilities,
-		})
-		vim.lsp.enable("clangd")
+				vim.lsp.config("clangd", {
+				    capabilities = capabilities,
+				})
+				vim.lsp.enable("clangd")
             end,
         },
 
@@ -196,7 +196,9 @@ require("lazy").setup({
             },
             build = ':lua require("go.install").update_all_sync()',
             config = function()
-                require("go").setup()
+                require("go").setup({
+					lsp_codelens = false,
+				})
 
                 vim.api.nvim_create_autocmd("BufWritePre", {
                     pattern = "*.go",
