@@ -42,6 +42,21 @@ vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 vim.keymap.set("n", "gd", vim.lsp.buf.definition)
 vim.keymap.set("n", "K", vim.lsp.buf.hover)
 
+
+vim.filetype.add({
+    extension = {
+        py = "python",
+        pyi = "python",
+    },
+    filename = {
+        ["SConstruct"] = "python",
+        ["SConscript"] = "python",
+    },
+})
+
+vim.cmd("filetype plugin indent on")
+vim.cmd("syntax enable")
+
 -- =====================
 -- Plugins
 -- =====================
@@ -183,6 +198,20 @@ require("lazy").setup({
 				    capabilities = capabilities,
 				})
 				vim.lsp.enable("clangd")
+
+                vim.lsp.config("pyright", {
+                    capabilities = capabilities,
+                    settings = {
+                        python = {
+                            analysis = {
+                                typeCheckingMode = "basic",
+                                autoSearchPaths = true,
+                                useLibraryCodeForTypes = true,
+                            },
+                        },
+                    },
+                })
+                vim.lsp.enable("pyright")
             end,
         },
 
@@ -209,6 +238,20 @@ require("lazy").setup({
             end,
         },
 
+		-- Python formatting
+        {
+            "stevearc/conform.nvim",
+            event = { "BufWritePre" },
+            opts = {
+                formatters_by_ft = {
+                    python = { "black" },
+                },
+                format_on_save = {
+                    timeout_ms = 500,
+                    lsp_fallback = true,
+                },
+            },
+        },
     },
 
     checker = { enabled = true },
